@@ -1,30 +1,39 @@
 package com.bridgelabz;
 
 public class CabInvoiceGenerator {
-    final int PER_KM_COST = 10;
-    final int PER_MIN_COST = 1;
-    final int MIN_FARE = 5;
+    int perKmCost;
+    int perMinCost;
+    int minFare;
 
-    public int calculateFare(int distance,int time) {
-        int totalFare = distance * PER_KM_COST + time * PER_MIN_COST;
-        if( totalFare < MIN_FARE) {
-            totalFare = MIN_FARE;
+    public int calculateFare(int distance,int time,Rides.RideType rideType) {
+        if(rideType == Rides.RideType.NORMAL) {
+            perKmCost = 10;
+            perMinCost = 1;
+            minFare = 5;
+        } else {
+            perKmCost = 15;
+            perMinCost = 2;
+            minFare = 20;
+        }
+        int totalFare = distance * perKmCost + time * perMinCost;
+        if( totalFare < minFare) {
+            totalFare = minFare;
         }
         return totalFare;
     }
 
-    public int multipleRides(Rides[] rides) {
+    public int multipleRides(Rides[] rides, Rides.RideType rideType) {
         int totalFare = 0;
         for(Rides ride : rides) {
-            totalFare += calculateFare(ride.distance,ride.duration);
+            totalFare += calculateFare(ride.distance,ride.duration,rideType);
         }
         return totalFare;
     }
 
-    public InvoiceSummary calculateInvoiceSummary(Rides[] rides) {
+    public InvoiceSummary calculateInvoiceSummary(Rides[] rides, Rides.RideType rideType) {
         int totalFare = 0;
         for(Rides ride : rides) {
-            totalFare += calculateFare(ride.distance,ride.duration);
+            totalFare += calculateFare(ride.distance,ride.duration,rideType);
         }
         return new InvoiceSummary(rides.length,totalFare);
     }
